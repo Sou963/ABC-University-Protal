@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
 
@@ -19,7 +19,7 @@ const CourseManager = () => {
     credit: "",
   });
 
-  const loadCourses = async () => {
+  const loadCourses = useCallback(async () => {
     if (!loggedInStudentId) return;
     setLoading(true);
     try {
@@ -33,11 +33,11 @@ const CourseManager = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [loggedInStudentId]);
 
   useEffect(() => {
     loadCourses();
-  }, [loggedInStudentId]);
+  }, [loadCourses]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();

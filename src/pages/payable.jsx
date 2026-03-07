@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
 
@@ -11,7 +11,7 @@ const PayableManager = () => {
   const loggedInStudentId = localStorage.getItem("studentId");
   const loggedInStudentName = localStorage.getItem("studentName");
 
-  const fetchData = async () => {
+  const fetchData = useCallback(async () => {
     if (!loggedInStudentId) return;
     setLoading(true);
     try {
@@ -31,11 +31,11 @@ const PayableManager = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [loggedInStudentId]);
 
   useEffect(() => {
     fetchData();
-  }, [loggedInStudentId]);
+  }, [fetchData]);
 
   // 🔹 ওয়েভার পার্সেন্টেজ ক্যালকুলেশন (সবগুলো ওয়েভার যোগফল)
   const totalWaiverPercent = waivers.reduce((sum, w) => sum + Number(w.totalAllowedWaiver || 0), 0);

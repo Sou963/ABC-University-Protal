@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
 
@@ -18,7 +18,7 @@ const PaymentManager = () => {
     note: "",
   });
 
-  const fetchPayments = async () => {
+  const fetchPayments = useCallback(async () => {
     if (!loggedInStudentId) return;
     setLoading(true);
     try {
@@ -32,11 +32,11 @@ const PaymentManager = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [loggedInStudentId]);
 
   useEffect(() => {
     fetchPayments();
-  }, [loggedInStudentId]);
+  }, [fetchPayments]);
 
   const handleAddPayment = async (e) => {
     e.preventDefault();

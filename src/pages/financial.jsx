@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
 
@@ -6,15 +6,13 @@ const FinancialReport = () => {
   const [courses, setCourses] = useState([]);
   const [payments, setPayments] = useState([]);
   const [waivers, setWaivers] = useState([]); // ওয়েভার ডাটা স্টোর করার জন্য
-  const [loading, setLoading] = useState(false);
 
   const CREDIT_RATE = 2500; 
   const loggedInStudentId = localStorage.getItem("studentId");
   const loggedInStudentName = localStorage.getItem("studentName");
 
-  const fetchData = async () => {
+  const fetchData = useCallback(async () => {
     if (!loggedInStudentId) return;
-    setLoading(true);
     try {
       // ১. কোর্স লিস্ট ফেচ (Payable)
       const courseRes = await fetch(`https://university-backend-ten.vercel.app/api/courses/student/${loggedInStudentId}`);
@@ -34,14 +32,12 @@ const FinancialReport = () => {
       
     } catch (error) {
       console.error("Data loading error:", error);
-    } finally {
-      setLoading(false);
     }
-  };
+  }, [loggedInStudentId]);
 
   useEffect(() => {
     fetchData();
-  }, [loggedInStudentId]);
+  }, [fetchData]);
 
   // --- Financial Calculations ---
   const rawTotalPayable = courses.reduce((sum, c) => sum + (Number(c.credit || 0) * CREDIT_RATE), 0);

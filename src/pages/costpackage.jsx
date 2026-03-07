@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
 
@@ -10,7 +10,7 @@ const CostPackage = () => {
   const loggedInStudentId = localStorage.getItem("studentId");
   const loggedInStudentName = localStorage.getItem("studentName");
 
-  const fetchPackageData = async () => {
+  const fetchPackageData = useCallback(async () => {
     if (!loggedInStudentId) return;
     setLoading(true);
     setError(null);
@@ -27,11 +27,11 @@ const CostPackage = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [loggedInStudentId]);
 
   useEffect(() => {
     fetchPackageData();
-  }, [loggedInStudentId]);
+  }, [fetchPackageData]);
 
   return (
     <div className="package-container-fluid">
