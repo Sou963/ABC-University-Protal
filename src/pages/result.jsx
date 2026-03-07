@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
+import { apiUrl } from "../api";
 
 const StudentResults = () => {
   const [courses, setCourses] = useState([]);
@@ -15,7 +16,9 @@ const StudentResults = () => {
     setLoading(true);
     setError(null);
     try {
-      const response = await fetch(`https://university-backend-ten.vercel.app/api/courses/student/${loggedInStudentId}`);
+      const response = await fetch(
+        apiUrl(`/api/courses/student/${loggedInStudentId}`)
+      );
       const data = await response.json();
       if (response.ok && data.courses) {
         setCourses(data.courses);
@@ -31,21 +34,26 @@ const StudentResults = () => {
 
   useEffect(() => {
     fetchResults();
-  }, [fetchResults]);
+  }, [fetchResults, loggedInStudentId]);
 
   // GPA calculation logic
   const calculateCGPA = () => {
-    const gradedCourses = courses.filter(c => c.result?.gradePoint != null);
+    const gradedCourses = courses.filter((c) => c.result?.gradePoint != null);
     if (gradedCourses.length === 0) return "0.00";
-    const totalPoints = gradedCourses.reduce((acc, curr) => acc + (curr.result.gradePoint * (curr.credit || 3)), 0);
-    const totalCredits = gradedCourses.reduce((acc, curr) => acc + (curr.credit || 3), 0);
+    const totalPoints = gradedCourses.reduce(
+      (acc, curr) => acc + curr.result.gradePoint * (curr.credit || 3),
+      0
+    );
+    const totalCredits = gradedCourses.reduce(
+      (acc, curr) => acc + (curr.credit || 3),
+      0
+    );
     return (totalPoints / totalCredits).toFixed(2);
   };
 
   return (
     <div className="results-page-bg">
       <div className="container py-5">
-        
         {/* Profile & Summary Header */}
         <div className="row mb-4 animate-fade-in">
           <div className="col-lg-8">
@@ -54,14 +62,20 @@ const StudentResults = () => {
                 <i className="bi bi-mortarboard-fill text-white fs-3"></i>
               </div>
               <div>
-                <h2 className="fw-bold text-dark mb-0">{loggedInStudentName}</h2>
-                <p className="text-muted mb-0">Academic Record • ID: {loggedInStudentId}</p>
+                <h2 className="fw-bold text-dark mb-0">
+                  {loggedInStudentName}
+                </h2>
+                <p className="text-muted mb-0">
+                  Academic Record • ID: {loggedInStudentId}
+                </p>
               </div>
             </div>
           </div>
           <div className="col-lg-4 text-lg-end">
             <div className="cgpa-card shadow-sm border-0 card p-3 bg-white rounded-4">
-              <span className="text-uppercase small fw-bold text-muted tracking-widest">Current CGPA</span>
+              <span className="text-uppercase small fw-bold text-muted tracking-widest">
+                Current CGPA
+              </span>
               <h2 className="fw-bold text-primary mb-0">{calculateCGPA()}</h2>
             </div>
           </div>
@@ -70,16 +84,24 @@ const StudentResults = () => {
         {/* Results Table Section */}
         <div className="card border-0 shadow-lg rounded-5 overflow-hidden animate-slide-up">
           <div className="card-header bg-white py-4 px-4 border-bottom d-flex justify-content-between align-items-center">
-            <h5 className="fw-bold mb-0 text-dark">Semester Wise Grade Sheet</h5>
-            <button className="btn btn-primary rounded-pill px-4 btn-sm" onClick={() => window.print()}>
+            <h5 className="fw-bold mb-0 text-dark">
+              Semester Wise Grade Sheet
+            </h5>
+            <button
+              className="btn btn-primary rounded-pill px-4 btn-sm"
+              onClick={() => window.print()}
+            >
               <i className="bi bi-printer me-2"></i> Print Transcript
             </button>
           </div>
-          
+
           <div className="card-body p-0">
             {loading ? (
               <div className="text-center py-5">
-                <div className="spinner-border text-primary" role="status"></div>
+                <div
+                  className="spinner-border text-primary"
+                  role="status"
+                ></div>
                 <p className="mt-2 text-muted">Fetching academic records...</p>
               </div>
             ) : error ? (
@@ -105,20 +127,32 @@ const StudentResults = () => {
                     {courses.map((c, index) => (
                       <tr key={index}>
                         <td className="ps-4 py-3">
-                          <div className="fw-bold text-dark">{c.courseTitle}</div>
-                          <small className="text-muted font-monospace">{c.courseCode}</small>
+                          <div className="fw-bold text-dark">
+                            {c.courseTitle}
+                          </div>
+                          <small className="text-muted font-monospace">
+                            {c.courseCode}
+                          </small>
                         </td>
-                        <td><span className="badge bg-light text-dark border fw-normal">{c.level || 'N/A'}</span></td>
-                        <td>{c.section || '-'}</td>
-                        <td className="fw-semibold">{c.credit || '3.0'}</td>
-                        <td>{c.result?.mark || '-'}</td>
                         <td>
-                          <span className={`grade-badge ${getGradeColor(c.result?.grade)}`}>
-                            {c.result?.grade || 'N/A'}
+                          <span className="badge bg-light text-dark border fw-normal">
+                            {c.level || "N/A"}
+                          </span>
+                        </td>
+                        <td>{c.section || "-"}</td>
+                        <td className="fw-semibold">{c.credit || "3.0"}</td>
+                        <td>{c.result?.mark || "-"}</td>
+                        <td>
+                          <span
+                            className={`grade-badge ${getGradeColor(
+                              c.result?.grade
+                            )}`}
+                          >
+                            {c.result?.grade || "N/A"}
                           </span>
                         </td>
                         <td className="pe-4 text-center fw-bold text-primary">
-                          {c.result?.gradePoint?.toFixed(2) || '0.00'}
+                          {c.result?.gradePoint?.toFixed(2) || "0.00"}
                         </td>
                       </tr>
                     ))}
@@ -132,8 +166,9 @@ const StudentResults = () => {
         {/* Notice Footer */}
         <div className="mt-4 text-center">
           <p className="text-muted small">
-            <i className="bi bi-info-circle me-1"></i> 
-            This is a computer-generated transcript. For official verification, please contact the Controller of Examinations.
+            <i className="bi bi-info-circle me-1"></i>
+            This is a computer-generated transcript. For official verification,
+            please contact the Controller of Examinations.
           </p>
         </div>
       </div>
@@ -195,11 +230,11 @@ const StudentResults = () => {
 
 // Helper function to color code grades
 const getGradeColor = (grade) => {
-  if (!grade) return 'grade-default';
-  if (grade.startsWith('A')) return 'grade-a';
-  if (grade.startsWith('B')) return 'grade-b';
-  if (grade === 'F') return 'grade-f';
-  return 'grade-default';
+  if (!grade) return "grade-default";
+  if (grade.startsWith("A")) return "grade-a";
+  if (grade.startsWith("B")) return "grade-b";
+  if (grade === "F") return "grade-f";
+  return "grade-default";
 };
 
 export default StudentResults;

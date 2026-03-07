@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
+import { apiUrl } from "../api";
 
 const WaiverInfo = () => {
   const [waivers, setWaivers] = useState([]);
@@ -16,7 +17,7 @@ const WaiverInfo = () => {
     setError(null);
     try {
       const response = await fetch(
-        `https://university-backend-ten.vercel.app/api/waiver/student/${loggedInStudentId}`
+        apiUrl(`/api/waiver/student/${loggedInStudentId}`)
       );
       const data = await response.json();
       if (response.ok) {
@@ -33,7 +34,7 @@ const WaiverInfo = () => {
 
   useEffect(() => {
     fetchWaiverData();
-  }, [fetchWaiverData]);
+  }, [fetchWaiverData, loggedInStudentId]);
 
   return (
     <div className="waiver-wrapper-fixed">

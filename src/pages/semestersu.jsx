@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
+import { apiUrl } from "../api";
 
 const SemesterTable = () => {
   const [semesterData, setSemesterData] = useState([]);
@@ -7,7 +8,7 @@ const SemesterTable = () => {
 
   const loadData = async () => {
     try {
-      const res = await fetch("https://university-backend-ten.vercel.app/api/semester/show");
+      const res = await fetch(apiUrl("/api/semester/show"));
       const result = await res.json();
       const chronologicalData = result.data ? [...result.data].reverse() : [];
       setSemesterData(chronologicalData);

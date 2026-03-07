@@ -5,6 +5,7 @@ import { Container, Row, Col, Form, Button, Nav, InputGroup, Alert } from "react
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import "./AuthPortal.css";
+import { API_BASE_URL, apiUrl } from "../api";
 
 const AuthPortal = () => {
   const [isLogin, setIsLogin] = useState(true);
@@ -38,7 +39,7 @@ const AuthPortal = () => {
     setSuccess("");
 
     const endpoint = isLogin ? "/api/auth/login" : "/api/auth/register";
-    const url = `https://university-backend-ten.vercel.app${endpoint}`;
+    const url = apiUrl(endpoint);
 
     try {
       const response = await fetch(url, {
@@ -65,7 +66,7 @@ const AuthPortal = () => {
         setError(data.message || "Authentication failed.");
       }
     } catch (err) {
-      setError("Server connection failed. Check if backend is running on port 3300.");
+      setError(`Server connection failed. Backend not reachable at ${API_BASE_URL}.`);
     } finally {
       setLoading(false);
     }
