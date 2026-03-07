@@ -1,0 +1,94 @@
+.fw-black {
+  font-weight: 900;
+}
+
+/* The scanline effect over the blue panel */
+.scanline {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.03) 50%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  background-size: 100% 4px;
+  z-index: 2;
+  pointer-events: none;
+  animation: scanMove 2s infinite linear;
+}
+
+@keyframes scanMove {
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(100%);
+  }
+}
+
+/* Shiver effect on button hover */
+.button-shiver:hover {
+  animation: shiver 0.2s infinite;
+}
+
+@keyframes shiver {
+  0% {
+    transform: translate(1px, 1px) rotate(0deg);
+  }
+  25% {
+    transform: translate(-1px, -1px) rotate(0.5deg);
+  }
+  50% {
+    transform: translate(-1px, 1px) rotate(-0.5deg);
+  }
+  75% {
+    transform: translate(1px, -1px) rotate(0deg);
+  }
+  100% {
+    transform: translate(1px, 1px) rotate(0deg);
+  }
+}
+
+.btn-danger-blue {
+  background: #2563eb;
+  transition: all 0.2s ease;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.btn-danger-blue:hover {
+  background: #1d4ed8;
+  box-shadow: 0 0 15px rgba(37, 99, 235, 0.5) !important;
+}
+
+.nextgen-input:focus {
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
+  border: 1px solid #2563eb !important;
+}
+.nextgen-input-group {
+  background-color: #f8f9fa; /* Light grey to match inputs */
+  border-radius: 8px; /* Smooth corners */
+  overflow: hidden;
+  transition: all 0.2s ease;
+}
+
+/* Subtle focus effect for the group */
+.nextgen-input-group:focus-within {
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
+  background-color: #ffffff;
+}
+
+.nextgen-input-group .form-control:focus {
+  box-shadow: none;
+  background-color: transparent;
+}
+
+/* Make the GEN button look like it belongs in the input */
+.nextgen-input-group .btn:hover {
+  color: #1e3a8a !important;
+  background-color: #e9ecef !important;
+}
