@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
 
@@ -10,7 +10,7 @@ const WaiverInfo = () => {
   const loggedInStudentId = localStorage.getItem("studentId");
   const loggedInStudentName = localStorage.getItem("studentName");
 
-  const fetchWaiverData = async () => {
+  const fetchWaiverData = useCallback(async () => {
     if (!loggedInStudentId) return;
     setLoading(true);
     setError(null);
@@ -29,11 +29,11 @@ const WaiverInfo = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [loggedInStudentId]);
 
   useEffect(() => {
     fetchWaiverData();
-  }, [loggedInStudentId]);
+  }, [fetchWaiverData]);
 
   return (
     <div className="waiver-wrapper-fixed">
