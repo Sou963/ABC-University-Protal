@@ -9,6 +9,7 @@ import CostPackage from "./pages/costpackage";
 import Result from "./pages/result";
 import Payablelist from "./pages/payable";
 import Payment from "./pages/payment";
+import CourseStructure from "./pages/course_structure";
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
         <Route path="/result" element={<Result />} />
         <Route path="/payable" element={<Payablelist />} />
         <Route path="/payments" element={<Payment />} />
+        <Route path="/course-structure" element={<CourseStructure />} />
       </Routes>
     </BrowserRouter>
   );
