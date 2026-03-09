@@ -27,10 +27,6 @@ const NUBStudentPortal = () => {
     return () => window.removeEventListener("resize", handleResize);
   }, [navigate]);
 
-  useEffect(() => {
-    if (window.innerWidth <= 768) setIsSidebarOpen(false);
-  }, [location]);
-
   const handleLogout = () => {
     localStorage.clear();
     navigate("/");
@@ -50,250 +46,226 @@ const NUBStudentPortal = () => {
   ];
 
   return (
-    <div className="d-flex" style={{ minHeight: "100vh", backgroundColor: "#ffffff", fontSize: "1.05rem" }}>
-
+    <div className="d-flex" style={{ minHeight: "100vh", backgroundColor: "#f8fafc", fontFamily: "'Inter', sans-serif" }}>
+      
       {/* MOBILE OVERLAY */}
       {isSidebarOpen && window.innerWidth <= 768 && (
-        <div
-          className="position-fixed w-100 h-100 top-0 start-0 bg-dark opacity-50"
-          style={{ zIndex: 1040 }}
+        <div 
+          className="position-fixed w-100 h-100 top-0 start-0 bg-dark opacity-50" 
+          style={{ zIndex: 1040, backdropFilter: "blur(4px)" }}
           onClick={() => setIsSidebarOpen(false)}
         ></div>
       )}
 
       {/* SIDEBAR */}
       <div
-        className={`bg-white shadow-sm sidebar-container ${isSidebarOpen ? "sidebar-open" : "sidebar-closed"}`}
+        className={`sidebar-container ${isSidebarOpen ? "sidebar-open" : "sidebar-closed"}`}
         style={{
-          width: "280px",
+          width: "290px",
           position: window.innerWidth <= 768 ? "fixed" : "relative",
           height: "100vh",
-          overflowY: "auto",
-          transition: "all 0.4s",
+          backgroundColor: "#ffffff",
+          display: "flex",
+          flexDirection: "column",
+          transition: "all 0.35s cubic-bezier(0.4, 0, 0.2, 1)",
           zIndex: 1050,
-          left: isSidebarOpen ? "0" : "-280px",
-          borderRight: "1px solid #f0f0f0",
-          fontSize: "1.05rem"
+          borderRight: "1px solid rgba(0,0,0,0.05)"
         }}
       >
-
+        {/* SIDEBAR LOGO */}
         <div className="p-4 d-flex align-items-center justify-content-between mb-2">
           <div className="d-flex align-items-center">
-            <div
-              className="bg-primary rounded-3 d-flex align-items-center justify-content-center me-2"
-              style={{ width: "40px", height: "40px" }}
-            >
+            <div className="bg-primary rounded-4 d-flex align-items-center justify-content-center shadow-lg" style={{ width: "48px", height: "48px", background: "linear-gradient(135deg, #3b82f6, #1d4ed8)" }}>
               <span className="text-white fw-bold fs-5">ABC</span>
             </div>
-
-            <h5 className="mb-0 fw-bold text-dark">
-              PORTAL <span className="text-primary">2.0</span>
-            </h5>
-
+            <div className="ms-3">
+               <h5 className="mb-0 fw-bold text-dark tracking-tighter" style={{ fontSize: "1.2rem" }}>PORTAL <span className="text-primary">2.0</span></h5>
+               <small className="text-muted fw-medium" style={{ fontSize: "0.75rem" }}>University System</small>
+            </div>
           </div>
-
-          <button
-            className="btn d-md-none p-0 border-0"
-            onClick={() => setIsSidebarOpen(false)}
-          >
-            <i className="bi bi-x-lg fs-3"></i>
+          <button className="btn d-md-none p-0 border-0" onClick={() => setIsSidebarOpen(false)}>
+             <i className="bi bi-x-circle-fill text-muted fs-4"></i>
           </button>
         </div>
 
-
-        <div className="px-3 mt-3">
-
-          <ul className="nav flex-column gap-2 list-unstyled">
-
+        {/* SIDEBAR NAVIGATION */}
+        <div className="px-3 flex-grow-1 overflow-auto custom-scrollbar">
+          <ul className="nav flex-column gap-1 list-unstyled">
             <SidebarLink icon="bi-grid-fill" label="Dashboard" to="/home" active={location.pathname === "/home"} />
             <SidebarLink icon="bi-calendar-event" label="Semester Schedule" to="/schedule" active={location.pathname === "/schedule"} />
             <SidebarLink icon="bi-book-half" label="Course Structure" to="/course-structure" active={location.pathname === "/course-structure"} />
 
-            <div className="my-3 border-top mx-3 opacity-50"></div>
-
-            <p
-              className="text-muted fw-bold px-3 text-uppercase mb-2"
-              style={{ fontSize: "0.8rem", letterSpacing: "1px" }}
-            >
-              Financials
-            </p>
+            <div className="px-3 mt-4 mb-2">
+               <p className="text-muted fw-bold text-uppercase m-0" style={{ fontSize: "0.75rem", letterSpacing: "1.5px", opacity: 0.6 }}>
+                 Student Life
+               </p>
+            </div>
 
             <SidebarLink icon="bi-wallet2" label="Financial Summary" to="/finance" active={location.pathname === "/finance"} />
             <SidebarLink icon="bi-award" label="Academic Result" to="/result" active={location.pathname === "/result"} />
-
-            <li className="mt-5 mb-4">
-
-              <button
-                onClick={handleLogout}
-                className="sidebar-link text-danger border-0 bg-transparent w-100 text-start"
-              >
-                <i className="bi bi-box-arrow-right me-3 fs-4"></i>
-                <span className="fw-semibold">Logout</span>
-              </button>
-
-            </li>
-
           </ul>
-
         </div>
 
+        {/* SIDEBAR FOOTER (LOGOUT) */}
+        <div className="p-3 border-top mt-auto" style={{ backgroundColor: "#fdfdfd" }}>
+          <button onClick={handleLogout} className="sidebar-link-logout text-danger border-0 w-100 text-start d-flex align-items-center p-3 rounded-4">
+            <i className="bi bi-box-arrow-right me-3 fs-4"></i>
+            <span className="fw-bold">Logout Account</span>
+          </button>
+        </div>
       </div>
 
-
-      {/* MAIN */}
-      <div className="flex-grow-1 d-flex flex-column w-100 overflow-hidden">
-
+      {/* MAIN CONTENT */}
+      <div className="flex-grow-1 d-flex flex-column w-100 overflow-hidden shadow-sm" style={{ backgroundColor: "#f8fafc" }}>
+        
         {/* HEADER */}
-        <div className="d-flex justify-content-between align-items-center p-3 p-md-4 bg-white">
-
+        <div className="d-flex justify-content-between align-items-center p-3 p-md-4 bg-white border-bottom">
           <button
-            className="btn btn-white shadow-sm rounded-3 border-0"
+            className="btn btn-light shadow-sm rounded-4 d-flex align-items-center justify-content-center border-0"
             onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-            style={{ width: "45px", height: "45px" }}
+            style={{ width: "48px", height: "48px" }}
           >
             <i className={`bi ${isSidebarOpen ? "bi-text-indent-right" : "bi-list"} fs-3 text-primary`}></i>
           </button>
 
-
-          <div
-            className="d-flex align-items-center gap-3 bg-white p-2 ps-3 pe-2 rounded-3 shadow-sm"
-          >
-
+          <div className="d-flex align-items-center gap-3 bg-light p-1 ps-3 pe-2 rounded-pill shadow-sm">
             <div className="text-end d-none d-sm-block">
-              <div className="text-dark fw-bold" style={{ fontSize: "1.05rem" }}>
-                {studentInfo.name}
-              </div>
-              <div className="text-muted fw-semibold" style={{ fontSize: "0.9rem" }}>
-                ID: {studentInfo.userId}
-              </div>
+              <div className="text-dark fw-bold" style={{ fontSize: "1rem" }}>{studentInfo.name}</div>
+              <div className="text-muted fw-medium" style={{ fontSize: "0.8rem" }}>ID: {studentInfo.userId}</div>
             </div>
-
             <div
-              className="rounded-3 bg-primary text-white d-flex align-items-center justify-content-center fw-bold"
-              style={{ width: "38px", height: "38px", fontSize: "1.1rem" }}
+              className="rounded-pill bg-white shadow-sm text-primary d-flex align-items-center justify-content-center fw-bold"
+              style={{ width: "40px", height: "40px", fontSize: "1.2rem", border: "2px solid #3b82f6" }}
             >
               {studentInfo.name.charAt(0).toUpperCase()}
             </div>
-
           </div>
-
         </div>
-
 
         {/* BODY */}
-        <div className="px-3 px-md-4 pb-4 overflow-auto">
-
+        <div className="px-3 px-md-4 py-4 overflow-auto scroll-smooth">
           {location.pathname === "/home" ? (
-
             <>
               <div
-                className="mb-4 p-4 p-md-5 rounded-4 text-white"
-                style={{
-                  background: "linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%)"
-                }}
+                className="mb-4 p-4 p-md-5 rounded-5 text-white shadow-lg border-0 position-relative overflow-hidden"
+                style={{ background: "linear-gradient(25deg, #1e40af 0%, #3b82f6 100%)" }}
               >
-
-                <h1 style={{ fontSize: "2.2rem", fontWeight: "700" }}>
-                  Welcome Back, {studentInfo.name.split(" ")[0]} 👋
-                </h1>
-
-                <p style={{ fontSize: "1.05rem" }}>
-                  Your academic overview is ready for today.
-                </p>
-
+                <div className="position-relative" style={{ zIndex: 2 }}>
+                  <h1 className="display-6 fw-bold mb-3" style={{ letterSpacing: "-1.5px" }}>
+                    Welcome Back, {studentInfo.name.split(" ")[0]}! 
+                  </h1>
+                  <p className="opacity-75 mb-0 fs-5 fw-light" style={{ maxWidth: "550px" }}>
+                    Track your semester progress from your dashboard.
+                  </p>
+                </div>
+                {/* Decorative circle */}
+                {/* <div className="position-absolute bg-white opacity-10 rounded-circle shadow-lg" style={{ width: "250px", height: "250px", top: "-50px", right: "-50px" }}></div> */}
               </div>
 
-
-              <div className="row g-3 g-md-4">
-
+              <div className="row g-4">
                 {menuCards.map((card, index) => (
-
                   <div className="col-6 col-md-4 col-lg-3" key={index}>
-
                     <div
-                      className="card border-0 shadow-sm p-3 p-md-4 h-100"
+                      className="card border-0 shadow-sm p-4 h-100 student-card position-relative overflow-hidden"
                       onClick={() => navigate(card.path)}
-                      style={{ cursor: "pointer" }}
+                      style={{ borderRadius: "24px", cursor: "pointer", transition: "all 0.3s ease" }}
                     >
-
                       <div
-                        className="mb-3 d-flex align-items-center justify-content-center rounded-3"
-                        style={{
-                          backgroundColor: `${card.color}10`,
-                          width: "50px",
-                          height: "50px"
-                        }}
+                        className="mb-4 d-flex align-items-center justify-content-center rounded-4 shadow-sm"
+                        style={{ backgroundColor: `${card.color}15`, width: "65px", height: "65px" }}
                       >
-
-                        <i
-                          className={`bi ${card.icon}`}
-                          style={{ color: card.color, fontSize: "1.5rem" }}
-                        ></i>
-
+                        <i className={`bi ${card.icon} fs-2`} style={{ color: card.color }}></i>
                       </div>
-
-                      <h6 style={{ fontSize: "1.1rem", fontWeight: "600" }}>
-                        {card.title}
-                      </h6>
-
+                      <h5 className="text-dark fw-bold mb-3" style={{ fontSize: "1.1rem" }}>{card.title}</h5>
+                      <div className="d-flex align-items-center text-primary fw-bold" style={{ fontSize: "0.85rem" }}>
+                        <span>Explore</span>
+                        <i className="bi bi-arrow-right-short ms-1 fs-5"></i>
+                      </div>
                     </div>
-
                   </div>
-
                 ))}
-
               </div>
-
             </>
-
           ) : (
-
-            <div className="p-4 bg-white rounded-3 shadow-sm border">
-              <h5 className="fw-bold">Module Content</h5>
-              <p>Navigate to {location.pathname}</p>
+            <div className="p-5 bg-white rounded-5 shadow-sm border text-center border-0">
+               <h3 className="fw-bold text-dark">Viewing {location.pathname}</h3>
+               <p className="text-muted">This module is being updated.</p>
             </div>
-
           )}
-
         </div>
-
       </div>
 
-
       <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
-.sidebar-link {
-  padding: 12px 16px;
-  border-radius: 8px;
-  color: #64748b;
-  text-decoration: none;
-  display: flex;
-  align-items: center;
-  font-weight: 600;
-  font-size: 1.05rem;
-}
+        .sidebar-open { transform: translateX(0); box-shadow: 20px 0 60px -15px rgba(0,0,0,0.05); }
+        .sidebar-closed { transform: translateX(-290px); width: 0 !important; }
+        
+        .student-card:hover { 
+          transform: translateY(-12px); 
+          box-shadow: 0 30px 60px -12px rgba(0,0,0,0.12) !important;
+          background-color: #ffffff;
+        }
 
-.sidebar-link:hover {
-  background-color: #f8fafc;
-  color: #2563eb;
-}
+        .sidebar-link { 
+          padding: 14px 18px; 
+          margin: 4px 8px;
+          border-radius: 14px; 
+          color: #64748b; 
+          text-decoration: none; 
+          display: flex; 
+          align-items: center; 
+          transition: all 0.3s ease; 
+          font-weight: 500;
+          font-size: 1.05rem;
+          position: relative;
+        }
+        
+        .sidebar-link:hover { background-color: #f1f5f9; color: #1e293b; }
+        
+        .sidebar-link.active { 
+          background-color: #3b82f6; 
+          color: white !important; 
+          font-weight: 600;
+          box-shadow: 0 8px 20px -6px rgba(59, 130, 246, 0.5);
+        }
 
-.sidebar-link.active {
-  background-color: #3b82f6;
-  color: white;
-}
+        .sidebar-link.active::before {
+          content: "";
+          position: absolute;
+          left: -10px;
+          top: 20%;
+          bottom: 20%;
+          width: 4px;
+          background: #3b82f6;
+          border-radius: 0 4px 4px 0;
+        }
 
+        .sidebar-link-logout {
+          background-color: transparent;
+          transition: all 0.2s;
+        }
+        .sidebar-link-logout:hover {
+          background-color: #fff1f2;
+          color: #e11d48 !important;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar { width: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #e2e8f0; border-radius: 10px; }
+
+        @media (max-width: 768px) {
+          .sidebar-container { position: fixed !important; top: 0; bottom: 0; left: 0; }
+        }
       `}</style>
-
     </div>
   );
 };
 
-const SidebarLink = ({ icon, label, to, active }) => (
+const SidebarLink = ({ icon, label, to = "#", active = false }) => (
   <li>
     <Link to={to} className={`sidebar-link ${active ? "active" : ""}`}>
-      <i className={`bi ${icon} me-3 fs-4`}></i>
-      {label}
+      <i className={`bi ${icon} me-3 fs-5`}></i>
+      <span style={{ whiteSpace: "nowrap" }}>{label}</span>
     </Link>
   </li>
 );
